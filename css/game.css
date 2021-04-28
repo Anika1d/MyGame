@@ -1,7 +1,7 @@
 .Menu {
     background: red;
-    width: 98.19%;
-    padding: 0.9%;
+    width: 99.4%;
+    padding: 0.3%;
 }
 
 .bod {
@@ -13,37 +13,40 @@
 }
 
 .intro {
-
+    margin-top: 1%;
+    margin-left: 5%;
+    margin-right: 5%;;
     overflow: hidden;
     max-height: 92vh;
 }
 
-.intro:after{
-    content: " ";
-    display: block;
-position: absolute;
-background-color: rgba(26, 41, 188, 1);
-    top: 0;
-    left: 0;
-    z-index: 2;
-}
+
 .video{
     position: relative;
     z-index: 1;
+    border: 2px solid white;
     padding-bottom: 56.25%;
 
-}
+}/*.video:after{
+     content: " ";
+     display: block;
+     position: absolute;
+     background-color: rgba(244, 1, 253,0.5);
+     top: 0;
+     left: 0;
+     z-index: 3;
+ }*/
 .video__media {
     position: absolute;
     width: 100%;
     height: auto;
     top: 0;
-    left: 0;
+    left: 0; z-index: 1;
 }
 
-.game_window{
-    position: absolute; top: 0;
-    left: 0;
-    z-index: 3;
-    width: 100%; height: 100%;
+.game_window {
+    position: absolute;
+    top: 0;
+    left: 0;width: 100%;height: 100%;
+    z-index: 4;
 }
