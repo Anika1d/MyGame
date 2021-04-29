@@ -10,54 +10,44 @@ var contex = canvas.getContext('2d');
 /*!Creating start game objects and their Function!*/
 
 /*--------------------------------------*/
+var asteroid = new Image()
+asteroid.src = 'img/tema/astero.png'
+/*var aster=[10]*/
+var user_board = new Image()
+user_board.src = 'img/User_Ships/1.png'
+/*class Asteroid {
 
-/*fun_Asteroid*/
-class Asteroid {
-    constructor() {
-        var asteroid = new Image()
-        asteroid.src = 'img/tema/astero.png'
-        var aster=[]
-    }
-    spawn()  { /*... */}
-   /* двигаем*/
-    update() {
+
+    constructor(self)
+    {
+            this.x = 290;
+            this.y = Math.random() * 115;
+            this.dx = 1;
+            this.dy = 2;
+            console.log(this)
 
     }
-    method3(){ /*... */}
-}
+
+    /* двигаем
+    update(self) {
+        console.log("vc")
+        for (let i = 0; i < 1; i++) {
+            contex.drawImage(asteroid,this.x,this.y,10, 10);
+            console.log(this)
+            this.x-=this.dx
+            this.y+=this.dy
+        }
+
+    }
+
+    method3() { /*...
+    }
+}*/
 
 
 /*--------------------------------------*/
 
-/*fun_Alien*/
-class Alien {
-    constructor() {
-        var alien_board = new Image();
-        alien_board.src = 'img/Alien_Ships/Alien-Bomber.png'
-        var al_b=[]
-    }
-    spawn() { /*... */}
-    update() {
 
-    }
-    method3(){ /*... */}
-}
-
-/*--------------------------------------*/
-/*fun_User*/
-class User {
-    constructor() {
-        var user_board = new Image();
-        user_board.src = 'img/User_Ships/13B.png'
-        var us_b=[]
-    }
-    spawn() { /*... */}
-    update() {
-
-    }
-    method3(){ /*... */}
-}
-/*--------------------------------------*/
 
 /*!вызов игры!*/
 /*-------------------*/
@@ -74,18 +64,28 @@ var requestAnimFrame = (function () {
 })();
 
 /*основной игровой цикл*/
+/*function spawn_objects() {
+    for (let i = 0; i < 10; i++){
+        aster[i].update( )
+}}*/
+
 function game() {
-    update();
+  /*  spawn_objects();*/
     render();
     requestAnimFrame(game);
 }
 
 
-
 function render() {
-    contex.drawImage(user_board, 1, 1, 10, 10);
+
     contex.drawImage(asteroid, 290, 117, 10, 10);
-    contex.drawImage(alien_board, 150, 50, 10, 10);
+    contex.drawImage(user_board, 150, 50, 10, 10);
 }
 
-game();
+contex.drawImage(user_board, 4, 5, 10, 10);
+/*for (let i = 0; i < 1; i++) {
+    aster[i]= new Asteroid();
+}
+*/
+
+game()
