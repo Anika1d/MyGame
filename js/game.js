@@ -39,7 +39,6 @@ bullet_a.src = 'img/tema/fire_ul.png'
 var bul = [];
 var bul_a = [];
 var alien_board = [];
-var start = new Date().getTime()
 var bos = new Image()
 bos.src = 'img/Alien_Ships/Alien-Mothership2.png'
 
@@ -149,6 +148,7 @@ class Bullet_B {
         this.y3 = boss.y + 260
         this.x4 = boss.x + 300
         this.y4 = boss.y + 185
+        this.damage=10
 
     }
 
@@ -205,8 +205,8 @@ class User_ship {
     constructor(self) {
         this.x = widht_game / 5;
         this.y = height_game / 2;
-        this.health = 100
-        this.live = 1
+        this.live = 3
+        this.health=100
     }
 
     render() {
@@ -250,7 +250,7 @@ var requestAnimFrame = (function () {
             window.setTimeout(callback, 1000 / 20);
         };
 })();
-
+var ship=new  User_ship()
 function del_all() {
     bul_a.splice(0, bul_a.length)
     aster.splice(0, aster.length)
@@ -268,7 +268,7 @@ function stat() {
     contex.fillText("HP:  " + ship.health + " Heart:  " + ship.live + " Score:  " + SCORE, 0, height_game - 12)
 }
 
-function ship_movement(regim) {
+function ship_movement() {
 
     ship.render()
     canvas.addEventListener("mousemove", function (event) {
@@ -283,76 +283,74 @@ function ship_movement(regim) {
         while (Time_kill < 100 * 100 * 10) {
             Time_kill++;
         }
-        Time_kill=0;
+        Time_kill = 0;
     }
-    var f_d = 1;
-    if (regim === 0) {
-
-        for (let j = 0; j < bul_a.length; j++) {
-            if (bul_a[j] !== undefined) {
-                if (f_d === 1) {
-                    if (Math.abs(ship.y + 35 - bul_a[j].y1 + 13) < 70
-                        && Math.abs(ship.x - bul_a[j].x1) < 15
-                        || Math.abs(ship.y + 35 - bul_a[j].y2 + 13) < 70
-                        && Math.abs(ship.x - bul_a[j].x2) < 15 && (Time_kill === 0)) {
-                        ship.health -= bul_a[j].damage;
-                        Time_kill++
-                        del_all();
-                        break;
-                    }
-                }
-
+    for (let j = 0; j < bul_a.length; j++) {
+        if (bul_a[j] !== undefined) {
+                if (Math.abs(ship.y + 35 - bul_a[j].y1 + 13) < 70
+                    && Math.abs(ship.x - bul_a[j].x1) < 15
+                    || Math.abs(ship.y + 35 - bul_a[j].y2 + 13) < 70
+                    && Math.abs(ship.x - bul_a[j].x2) < 15 && (Time_kill === 0)) {
+                    ship.health  -= bul_a[j].damage;
+                    bul_a.splice(j,1)
+                    Time_kill++
+                    del_all();
+                    break;
             }
-        }
-        for (var j = 0; j < alien_board.length; j++) {
-            if (alien_board[j] !== undefined) {
-                if (f_d === 1) {
-                    if (Math.abs(ship.y + 35 - alien_board[j].y + 35) < 70
-                        && Math.abs(ship.x - alien_board[j].x) < 35 && (Time_kill === 0)) {
-                        Time_kill++;
-                        ship.health -= alien_board[j].damage;
-                        del_all();
-                        break;
-                    }
-                }
-            }
-        }
-        for (var j = 0; j < aster.length; j++) {
 
-            if (aster[j] !== undefined) {
-                if (f_d === 1) {
-                    if (Math.abs(ship.y + 35 - aster[j].y + 25) < 70
-                        && Math.abs(ship.x - aster[j].x) < 35 && (Time_kill === 0)) {
-                        ship.health -= aster[j].damage;
-                        del_all()
-                        Time_kill++
-                        break;
-                    }
-                }
-
-            }
-        }
-    } else {
-        for (let j = 0; j < bul_boss.length; j++) {
-            if (bul_boss[j] !== undefined) {
-                if (f_d === 1) {
-                    if (Math.abs(ship.y + 35 - bul_boss[j].y1 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].x1) <35 || Math.abs(ship.y + 35 - bul_boss[j].y2 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].x2) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y3 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].x3) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y4 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].x4) < 35 || Math.abs(ship.y  - bul_boss[j].yup2) <35
-                        && Math.abs(ship.x+35 - bul_boss[j].xup2+13) <70 || Math.abs(ship.y - bul_boss[j].yup1 ) < 35
-                        && Math.abs(ship.x+35 - bul_boss[j].xup1+13) <70 || Math.abs(ship.y- bul_boss[j].ydown2 ) <35
-                        && Math.abs(ship.x+35 - bul_boss[j].xdown2+13) < 70 || Math.abs(ship.y - bul_boss[j].ydown1 ) < 35
-                        && Math.abs(ship.x+35 - bul_boss[j].xdown1+13) < 70&& (Time_kill === 0)) {
-                        ship.health -= bul_boss[j].damage;
-                        Time_kill++;
-                        break;
-                    }
-                }
-            }
         }
     }
+    for (var j = 0; j < alien_board.length; j++) {
+        if (alien_board[j] !== undefined) {
+
+                if (Math.abs(ship.y + 35 - alien_board[j].y + 35) < 70
+                    && Math.abs(ship.x - alien_board[j].x) < 35 && (Time_kill === 0)) {
+                    Time_kill++;
+
+                    ship.health -= alien_board[j].damage;
+                   alien_board.splice(j,1)
+                    break;
+                }
+            }
+        }
+
+    for (var j = 0; j < aster.length; j++) {
+
+        if (aster[j] !== undefined) {
+                if (Math.abs(ship.y + 35 - aster[j].y + 25) < 70
+                    && Math.abs(ship.x - aster[j].x) < 35 && (Time_kill === 0)) {
+                    ship.health  -= aster[j].damage;
+                    del_all();aster.splice(j,1)
+                    Time_kill++
+                    break;
+                }
+            }
+
+        }
+    for (var j = 0; j < bul_boss.length; j++) {
+        if (bul_boss[j] !== undefined) {
+                if (Math.abs(ship.y + 35 - bul_boss[j].y1 + 13) < 70
+                    && Math.abs(ship.x - bul_boss[j].x1) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y2 + 13) < 70
+                    && Math.abs(ship.x - bul_boss[j].x2) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y3 + 13) < 70
+                    && Math.abs(ship.x - bul_boss[j].x3) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y4 + 13) < 70
+                    && Math.abs(ship.x - bul_boss[j].x4) < 35 || Math.abs(ship.y - bul_boss[j].yup2) < 35
+                    && Math.abs(ship.x + 35 - bul_boss[j].xup2 + 13) < 70 || Math.abs(ship.y - bul_boss[j].yup1) < 35
+                    && Math.abs(ship.x + 35 - bul_boss[j].xup1 + 13) < 70 || Math.abs(ship.y - bul_boss[j].ydown2) < 35
+                    && Math.abs(ship.x + 35 - bul_boss[j].xdown2 + 13) < 70 || Math.abs(ship.y - bul_boss[j].ydown1) < 35
+                    && Math.abs(ship.x + 35 - bul_boss[j].xdown1 + 13) < 70 && (Time_kill === 0)) {
+                    ship.health -= bul_boss[j].damage;
+                   bul_boss.splice(j,1)
+                    Time_kill++;
+                    break;
+                }
+            }
+
+
+    }
+    if (Math.abs(ship.y + 35 - boss.y + 222) < 444
+        && Math.abs(ship.x - boss.x) < 222) {
+        ship.health -= boss.damage;
+       }
     if (ship.health <= 0) {
         ship.live--;
         if (ship.live <= 0) {
@@ -370,8 +368,8 @@ function ship_movement(regim) {
         if (bul[i].x > widht_game + 1) {
             bul.splice(i, 1)
         }
-    }
-}
+    }}
+
 
 function menu() {
     return 0;
@@ -471,19 +469,20 @@ function spawn_boss() {
         }
     }
     for (let j = 0; j < bul.length; j++) {
-        if (Math.abs(boss.y+250 - bul[j].y1 + 13) < 150 && Math.abs(boss.x - bul[j].x1+120) < 222
-            || Math.abs(boss.y + 250 - bul[j].y2 + 13) < 150 && Math.abs(boss.x - bul[j].x2+120) < 222 ||
-          boss.y + 60<bul[j].y2 && Math.abs(boss.x - bul[j].x2) < 222 && boss.y + 60>=bul[j].y1
-          ) {
-            bul.splice(j,1)
+        if (Math.abs(boss.y + 250 - bul[j].y1 + 13) < 150 && Math.abs(boss.x - bul[j].x1 + 120) < 222
+            || Math.abs(boss.y + 250 - bul[j].y2 + 13) < 150 && Math.abs(boss.x - bul[j].x2 + 120) < 222 ||
+            boss.y + 60 < bul[j].y2 && Math.abs(boss.x - bul[j].x2) < 222 && boss.y + 60 >= bul[j].y1
+        ) {
+            bul.splice(j, 1)
             boss.hp -= 1
             SCORE++;
 
-        if (boss.hp <= 0) {
-            boss = undefined
-            flag = 2
-            break
-        }}
+            if (boss.hp <= 0) {
+                boss = undefined
+                flag = 2
+                break
+            }
+        }
     }
 
 
@@ -491,13 +490,12 @@ function spawn_boss() {
 
 function boss_game() {
     stat()
-    ship_movement(1)
+    ship_movement()
     spawn_boss()
 }
 
 /*основной игровой цикл*/
-function spawn_objects() {
-    ship_movement(0)
+function spawn_objects() {ship_movement()
     spawn_aster();
     spawn_alien_ships();
 }
@@ -544,7 +542,7 @@ function render() {
 
 var b = true
 while (b) {
-    ship = new User_ship();
+
     ship.render()
     var boss = new Alien_Boss();
     b = game();
