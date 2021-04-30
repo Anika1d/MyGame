@@ -113,13 +113,13 @@ class Alien_Boss {
         this.damage = 100
         this.hp = 10000
         this.x = widht_game;
-        this.y = height_game / 4 -50;
-        this.dx=1
+        this.y = height_game / 4 - 50;
+        this.dx = 1
     }
 
     update(self) {
-        this.x -=this.dx
-        if (this.x > widht_game+100 || this.x <= 0) {
+        this.x -= this.dx
+        if (this.x > widht_game + 100 || this.x <= 0) {
             this.dx = -this.dx;
 
         }
@@ -132,23 +132,23 @@ class Alien_Boss {
 
 class Bullet_B {
     constructor() {
-        this.x1 = boss.x+120
-        this.y1 = boss.y+185
-        this.x2 = boss.x+120
-        this.y2 = boss.y+260
+        this.x1 = boss.x + 120
+        this.y1 = boss.y + 185
+        this.x2 = boss.x + 120
+        this.y2 = boss.y + 260
         this.dx = 4
-        this.xup1 = boss.x+170
-        this.yup1 = boss.y+185
-        this.xup2 = boss.x+300
-        this.yup2 = boss.y+185
-        this.xdown1 = boss.x+170
-        this.ydown1 = boss.y+260
-        this.xdown2 = boss.x+300
-        this.ydown2 = boss.y+260
-        this.x3 = boss.x+300
-        this.y3 = boss.y+260
-        this.x4 = boss.x+300
-        this.y4 = boss.y+185
+        this.xup1 = boss.x + 170
+        this.yup1 = boss.y + 185
+        this.xup2 = boss.x + 300
+        this.yup2 = boss.y + 185
+        this.xdown1 = boss.x + 170
+        this.ydown1 = boss.y + 260
+        this.xdown2 = boss.x + 300
+        this.ydown2 = boss.y + 260
+        this.x3 = boss.x + 300
+        this.y3 = boss.y + 260
+        this.x4 = boss.x + 300
+        this.y4 = boss.y + 185
     }
 
     update(self) {
@@ -205,7 +205,7 @@ class User_ship {
         this.x = widht_game / 5;
         this.y = height_game / 2;
         this.health = 100
-        this.live = 1
+        this.live = 2
     }
 
     render() {
@@ -345,8 +345,7 @@ function ship_movement(regim) {
                 }
             }
         }
-    }
-    else {
+    } else {
         for (let j = 0; j < bul_boss.length; j++) {
             end = new Date().getTime() - start;
             if (bul_boss[j] !== undefined) {
@@ -375,28 +374,36 @@ function ship_movement(regim) {
             }
         }
     }
-    if (ship.health <= 0) {
-        ship.live--;
-        if (ship.live <= 0) {
-            flag = 0
-            console.log("GAMEOVER")
-        } else {
-            ship.health = 100;
-            user_board.globalAlpha = 0.5
+    if (ship.health <= 0 || isNaN(ship.health)) {
+        if (regim === 1) {
+            ship.x = widht_game;
+            ship.y = height_game - 100;
         }
-    }
-    time_bul++;
-    for (let i = 0; i < bul.length; i++) {
-        bul[i].render()
-        bul[i].update()
-        if (bul[i].x > widht_game + 1) {
-            bul.splice(i, 1)
+        {
+            ship.live--;
+            if (ship.live <= 0) {
+                flag = 0
+                console.log("GAMEOVER")
+            } else {
+                ship.health = 100;
+                user_board.globalAlpha = 0.5
+            }
+        }
+        time_bul++;
+        for (let i = 0; i < bul.length; i++) {
+            bul[i].render()
+            bul[i].update()
+            if (bul[i].x > widht_game + 1) {
+                bul.splice(i, 1)
+            }
         }
     }
 }
-function menu(){
+
+function menu() {
     return 0;
 }
+
 function spawn_alien_ships() {
     if (time_set_alien % 40 === 0) {
         alien_board.push(new Alien());
@@ -491,9 +498,9 @@ function spawn_boss() {
         }
     }
     for (let j = 0; j < bul.length; j++) {
-        if (Math.abs(boss.y + 35 - bul[j].y1 + 13) < 70
+        if (Math.abs(boss.y + 35 - bul[j].y1 + 13) < 444
             && Math.abs(boss.x - bul[j].x1) < 35
-            || Math.abs(boss.y + 35 - bul[j].y2 + 13) < 100
+            || Math.abs(boss.y + 35 - bul[j].y2 + 13) < 500
             && Math.abs(boss.x - bul[j].x2) < 35) {
             boss.hp -= 100
             SCORE++;
