@@ -21,7 +21,7 @@ var heart = new Image()
 heart.src = 'img/tema/heart.svg'
 var score = new Image()
 score.src = 'img/tema/SCORE.png'
-
+var Time_kill = 0
 var asteroid = new Image()
 asteroid.src = 'img/tema/astero.png'
 var aster = []
@@ -111,7 +111,7 @@ class Alien {
 class Alien_Boss {
     constructor(self) {
         this.damage = 100
-        this.hp = 10000
+        this.hp = 5000
         this.x = widht_game;
         this.y = height_game / 4 - 50;
         this.dx = 1
@@ -149,6 +149,7 @@ class Bullet_B {
         this.y3 = boss.y + 260
         this.x4 = boss.x + 300
         this.y4 = boss.y + 185
+
     }
 
     update(self) {
@@ -205,7 +206,7 @@ class User_ship {
         this.x = widht_game / 5;
         this.y = height_game / 2;
         this.health = 100
-        this.live = 2
+        this.live = 1
     }
 
     render() {
@@ -278,124 +279,96 @@ function ship_movement(regim) {
     if (time_bul % 60 === 0) {
         bul.push(new Bullet_U)
     }
-
+    if (Time_kill !== 0) {
+        while (Time_kill < 100 * 100 * 10) {
+            Time_kill++;
+        }
+        Time_kill=0;
+    }
     var f_d = 1;
-    var end = new Date().getTime() - start;
     if (regim === 0) {
+
         for (let j = 0; j < bul_a.length; j++) {
-            end = new Date().getTime() - start;
             if (bul_a[j] !== undefined) {
                 if (f_d === 1) {
                     if (Math.abs(ship.y + 35 - bul_a[j].y1 + 13) < 70
                         && Math.abs(ship.x - bul_a[j].x1) < 15
                         || Math.abs(ship.y + 35 - bul_a[j].y2 + 13) < 70
-                        && Math.abs(ship.x - bul_a[j].x2) < 15) {
-                        console.log(end)
+                        && Math.abs(ship.x - bul_a[j].x2) < 15 && (Time_kill === 0)) {
                         ship.health -= bul_a[j].damage;
-                        f_d = 0;
+                        Time_kill++
                         del_all();
-                        start = new Date().getTime()
                         break;
                     }
                 }
 
-                if (end % 3000000000 === 0) {
-                    f_d = 1
-                }
             }
         }
         for (var j = 0; j < alien_board.length; j++) {
-            end = new Date().getTime() - start;
             if (alien_board[j] !== undefined) {
                 if (f_d === 1) {
                     if (Math.abs(ship.y + 35 - alien_board[j].y + 35) < 70
-                        && Math.abs(ship.x - alien_board[j].x) < 35) {
-                        console.log(end)
+                        && Math.abs(ship.x - alien_board[j].x) < 35 && (Time_kill === 0)) {
+                        Time_kill++;
                         ship.health -= alien_board[j].damage;
-                        f_d = 0;
                         del_all();
-
-                        start = new Date().getTime()
                         break;
                     }
-                }
-
-                if (end % 3000000000 === 0) {
-                    f_d = 1
                 }
             }
         }
         for (var j = 0; j < aster.length; j++) {
-            end = new Date().getTime() - start;
+
             if (aster[j] !== undefined) {
                 if (f_d === 1) {
                     if (Math.abs(ship.y + 35 - aster[j].y + 25) < 70
-                        && Math.abs(ship.x - aster[j].x) < 35) {
-                        console.log(end)
+                        && Math.abs(ship.x - aster[j].x) < 35 && (Time_kill === 0)) {
                         ship.health -= aster[j].damage;
-                        f_d = 0;
                         del_all()
-                        start = new Date().getTime()
+                        Time_kill++
                         break;
                     }
                 }
 
-                if (end % 3000000000 === 0) {
-                    f_d = 1
-                }
             }
         }
     } else {
         for (let j = 0; j < bul_boss.length; j++) {
-            end = new Date().getTime() - start;
             if (bul_boss[j] !== undefined) {
                 if (f_d === 1) {
                     if (Math.abs(ship.y + 35 - bul_boss[j].y1 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].x1) < 15
-                        || Math.abs(ship.y + 35 - bul_boss[j].y2 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].x2) < 15 || Math.abs(ship.y + 35 - bul_boss[j].y3 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].x3) < 15 || Math.abs(ship.y + 35 - bul_boss[j].y4 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].x4) < 15 || Math.abs(ship.y + 35 - bul_boss[j].yup2 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].xup2) < 15 || Math.abs(ship.y + 35 - bul_boss[j].yup1 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].xup1) < 15 || Math.abs(ship.y + 35 - bul_boss[j].ydown2 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].xdown2) < 15 || Math.abs(ship.y + 35 - bul_boss[j].ydown1 + 13) < 70
-                        && Math.abs(ship.x - bul_boss[j].xdown1) < 15) {
-                        console.log(end)
+                        && Math.abs(ship.x - bul_boss[j].x1) <35 || Math.abs(ship.y + 35 - bul_boss[j].y2 + 13) < 70
+                        && Math.abs(ship.x - bul_boss[j].x2) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y3 + 13) < 70
+                        && Math.abs(ship.x - bul_boss[j].x3) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y4 + 13) < 70
+                        && Math.abs(ship.x - bul_boss[j].x4) < 35 || Math.abs(ship.y  - bul_boss[j].yup2) <35
+                        && Math.abs(ship.x+35 - bul_boss[j].xup2+13) <70 || Math.abs(ship.y - bul_boss[j].yup1 ) < 35
+                        && Math.abs(ship.x+35 - bul_boss[j].xup1+13) <70 || Math.abs(ship.y- bul_boss[j].ydown2 ) <35
+                        && Math.abs(ship.x+35 - bul_boss[j].xdown2+13) < 70 || Math.abs(ship.y - bul_boss[j].ydown1 ) < 35
+                        && Math.abs(ship.x+35 - bul_boss[j].xdown1+13) < 70&& (Time_kill === 0)) {
                         ship.health -= bul_boss[j].damage;
-                        f_d = 0;
-                        start = new Date().getTime()
+                        Time_kill++;
                         break;
                     }
-                }
-
-                if (end % 3000000000 === 0) {
-                    f_d = 1
                 }
             }
         }
     }
-    if (ship.health <= 0 || isNaN(ship.health)) {
-        if (regim === 1) {
-            ship.x = widht_game;
-            ship.y = height_game - 100;
+    if (ship.health <= 0) {
+        ship.live--;
+        if (ship.live <= 0) {
+            flag = 0
+            console.log("GAMEOVER")
+        } else {
+            ship.health = 100;
+            user_board.globalAlpha = 0.5
         }
-        {
-            ship.live--;
-            if (ship.live <= 0) {
-                flag = 0
-                console.log("GAMEOVER")
-            } else {
-                ship.health = 100;
-                user_board.globalAlpha = 0.5
-            }
-        }
-        time_bul++;
-        for (let i = 0; i < bul.length; i++) {
-            bul[i].render()
-            bul[i].update()
-            if (bul[i].x > widht_game + 1) {
-                bul.splice(i, 1)
-            }
+    }
+    time_bul++;
+    for (let i = 0; i < bul.length; i++) {
+        bul[i].render()
+        bul[i].update()
+        if (bul[i].x > widht_game + 1) {
+            bul.splice(i, 1)
         }
     }
 }
@@ -464,7 +437,7 @@ function spawn_aster() {
             if (aster[i] !== undefined) {
                 if (Math.abs(aster[i].y + 35 - bul[j].y1 + 13) < 70
                     && Math.abs(aster[i].x - bul[j].x1) < 35
-                    || Math.abs(aster[i].y + 35 - bul[j].y2 + 13) < 100
+                    || Math.abs(aster[i].y + 35 - bul[j].y2 + 13) < 70
                     && Math.abs(aster[i].x - bul[j].x2) < 35) {
                     aster[i].del = 1
                     SCORE++;
@@ -498,18 +471,19 @@ function spawn_boss() {
         }
     }
     for (let j = 0; j < bul.length; j++) {
-        if (Math.abs(boss.y + 35 - bul[j].y1 + 13) < 444
-            && Math.abs(boss.x - bul[j].x1) < 35
-            || Math.abs(boss.y + 35 - bul[j].y2 + 13) < 500
-            && Math.abs(boss.x - bul[j].x2) < 35) {
-            boss.hp -= 100
+        if (Math.abs(boss.y+250 - bul[j].y1 + 13) < 150 && Math.abs(boss.x - bul[j].x1+120) < 222
+            || Math.abs(boss.y + 250 - bul[j].y2 + 13) < 150 && Math.abs(boss.x - bul[j].x2+120) < 222 ||
+          boss.y + 60<bul[j].y2 && Math.abs(boss.x - bul[j].x2) < 222 && boss.y + 60>=bul[j].y1
+          ) {
+            bul.splice(j,1)
+            boss.hp -= 1
             SCORE++;
-            if (boss.hp <= 0) {
-                boss = undefined
-                flag = 2
-                break
-            }
-        }
+
+        if (boss.hp <= 0) {
+            boss = undefined
+            flag = 2
+            break
+        }}
     }
 
 
