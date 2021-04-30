@@ -5,8 +5,8 @@ var canvas = document.getElementById('Game_js');
 var contex = canvas.getContext('2d');
 var time_set_aster = 0;
 var time_bul = 0;
-var time_bul_a=0;
-var time_set_alien=0;
+var time_bul_a = 0;
+var time_set_alien = 0;
 var ship;
 /*Размеры поля  */
 canvas.width = window.innerWidth
@@ -20,22 +20,23 @@ var asteroid = new Image()
 asteroid.src = 'img/tema/astero.png'
 var aster = []
 var user_board = new Image()
-user_board.src = 'img/User_Ships/1.png'
+user_board.src = 'img/User_Ships/3B.png'
 var alien_board1 = new Image()
 alien_board1.src = 'img/Alien_Ships/Alien-Scout.png'
 var bullet = new Image();
 bullet.src = 'img/tema/fire.png'
 var bullet_a = new Image();
 bullet_a.src = 'img/tema/fire_ul.png'
-var bul = [ ];
-var bul_a = [ ];
-var alien_board=[];
+var bul = [];
+var bul_a = [];
+var alien_board = [];
 
 class Alien {
 
 
     constructor(self) {
-
+        this.del = 0;
+        this.damage = 70
         this.x = widht_game + 100;
         this.y = Math.random() * height_game;
         this.dx = Math.random() + 0.2;
@@ -62,7 +63,8 @@ class Asteroid {
 
 
     constructor(self) {
-
+        this.del = 0
+        this.damage = 100
         this.x = widht_game + 100;
         this.y = Math.random() * height_game;
         this.dx = Math.random() + 0.5;
@@ -83,6 +85,7 @@ class Asteroid {
     }
 
 }
+
 class User_ship {
     constructor(self) {
         this.x = widht_game / 5;
@@ -112,17 +115,19 @@ class Bullet_U {
     }
 
     render(self) {
-        contex.drawImage(bullet, this.x1, this.y1, 25, 25);
-        contex.drawImage(bullet, this.x2, this.y2, 25, 25);
+        contex.drawImage(bullet, this.x1, this.y1, 26, 26);
+        contex.drawImage(bullet, this.x2, this.y2, 26, 26);
     }
 }
+
 class Bullet_A {
     constructor(al) {
+        this.damage = 10;
         this.x1 = al.x + 40
         this.y1 = al.y
         this.x2 = al.x + 40
         this.y2 = al.y + 35
-        this.dx = 4
+        this.dx = 0.1
 
     }
 
@@ -132,8 +137,8 @@ class Bullet_A {
     }
 
     render(self) {
-        contex.drawImage(bullet, this.x1, this.y1, 25, 25);
-        contex.drawImage(bullet, this.x2, this.y2, 25, 25);
+        contex.drawImage(bullet_a, this.x1, this.y1, 26, 26);
+        contex.drawImage(bullet_a, this.x2, this.y2, 26, 26);
     }
 }
 
@@ -159,41 +164,42 @@ function ship_movement() {
         ship.y = event.offsetY;
     })
 
-    if (time_bul % 10 === 0) {
+    if (time_bul % 55 === 0) {
         bul.push(new Bullet_U)
     }
     time_bul++;
     for (let i = 0; i < bul.length; i++) {
         bul[i].render()
         bul[i].update()
-        if (bul[i].x < -80) {
+        if (bul[i].x >widht_game+1) {
             bul.splice(i, 1)
         }
     }
 }
 
 function spawn_alien_ships() {
-    if (time_set_alien % 40 === 0) {
+    if (time_set_alien % 70 === 0) {
         alien_board.push(new Alien());
     }
     time_set_alien++;
+
     for (let i = 0; i < alien_board.length; i++) {
 
         alien_board[i].render()
         alien_board[i].update()
-        if (time_bul_a % 10 === 0) {
+        if (time_bul_a % 320 === 1) {
             bul_a.push(new Bullet_A(alien_board[i]))
         }
         time_bul_a++;
-        for (let i = 0; i < bul.length; i++) {
-            bul_a[i].render()
-            bul_a[i].update()
-            if (bul_a[i].x > widht_game + 85) {
-                bul_a.splice(i, 1)
+        for (let j = 0; j < bul_a.length; j++) {
+            bul_a[j].render()
+            bul_a[j].update()
+            if (bul_a[j].x < -32) {
+                bul_a.splice(j, 1)
             }
         }
         if (alien_board[i].x < -84) {
-            alien_board.splice(i, 1)/* перепроверить */
+            alien_board.splice(i, 1)
         }
 
     }
@@ -210,6 +216,17 @@ function spawn_aster() {
 
         aster[i].render()
         aster[i].update()
+        for (let j = 0; j < bul.length; j++) {
+            if (Math.abs(aster[i].y - 35 - bul[j].y1 - 13) < 70 && Math.abs(aster[i].x - bul[j].x1) < 35 ||
+              Math.abs(aster[i].y - 35 - bul[j].y2 - 13) < 100 && Math.abs(aster[i].x - bul[j].x2) < 35){
+                aster[i].del = 1
+                bul.splice(j, 1)
+                break/* перепроверить */
+            }
+            if (aster[i].del===1){
+                aster.splice(i, 1)
+            }
+        }
         if (aster[i].x < -84) {
             aster.splice(i, 1)/* перепроверить */
         }
@@ -236,7 +253,6 @@ function game() {
 function render() {
     spawn_objects();
 }
-
 
 
 ship = new User_ship();
