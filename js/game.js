@@ -17,6 +17,11 @@ var height_game = canvas.height - 150
 
 /*--------------------------------------*/
 var flag = 1
+var heart=new  Image()
+heart.src='img/tema/heart.svg'
+var score=new  Image()
+score.src='img/tema/SCORE.png'
+
 var asteroid = new Image()
 asteroid.src = 'img/tema/astero.png'
 var aster = []
@@ -103,7 +108,7 @@ class User_ship {
         this.x = widht_game / 5;
         this.y = height_game / 2;
         this.health = 100
-        this.live = 3
+        this.live = 1
     }
 
     render() {
@@ -173,6 +178,11 @@ function del_all(){
     aster.splice(0,aster.length)
     alien_board.splice(0,alien_board.length)
     contex.clearRect(0, 0, widht_game + 100, height_game + 200);
+}
+function menu(){
+    contex.fillStyle='#000'
+    contex.font="24px Verdana";
+    contex.fillText("HP:  " + ship.health + " Heart:  " + ship.live +" Score:  " + SCORE,0,height_game-12 )
 }
 function ship_movement(handle) {
 
@@ -361,12 +371,14 @@ function game() {
 
     if (flag === 1) {
         requestAnimFrame(game);
-    } else {
+
+    } else { menu();
         console.log('GROEPWRPO')
     }
 }
 
 function render() {
+   menu()
     spawn_objects();
 }
 
