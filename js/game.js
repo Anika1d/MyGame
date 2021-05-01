@@ -9,13 +9,21 @@ var time_bul_a = 0;
 var time_set_alien = 0;
 var ship;
 /*Размеры поля  */
+var OX;
+var OY;
 canvas.width = window.innerWidth
 var widht_game = canvas.width - 70
 canvas.height = window.innerHeight
 var height_game = canvas.height - 150
 /*!Creating start game objects and their Function!*/
-
+var key_b = 0
 /*--------------------------------------*/
+var again = new Image()
+again.src = 'img/tema/again.png'
+var win1 = new Image();
+var lose = new Image();
+win1.src = 'img/tema/win.png'
+lose.src = 'img/tema/lose.png'
 var flag = 1
 var heart = new Image()
 heart.src = 'img/tema/heart.svg'
@@ -41,6 +49,8 @@ var bul_a = [];
 var alien_board = [];
 var bos = new Image()
 bos.src = 'img/Alien_Ships/Alien-Mothership2.png'
+/*--------------------------------------*/
+
 
 /*--------------------------------------*/
 
@@ -110,7 +120,7 @@ class Alien {
 class Alien_Boss {
     constructor(self) {
         this.damage = 100
-        this.hp = 5000
+        this.hp = 500
         this.x = widht_game;
         this.y = height_game / 4 - 50;
         this.dx = 1
@@ -148,7 +158,7 @@ class Bullet_B {
         this.y3 = boss.y + 260
         this.x4 = boss.x + 300
         this.y4 = boss.y + 185
-        this.damage=10
+        this.damage = 10
 
     }
 
@@ -206,7 +216,7 @@ class User_ship {
         this.x = widht_game / 5;
         this.y = height_game / 2;
         this.live = 3
-        this.health=100
+        this.health = 100
     }
 
     render() {
@@ -250,7 +260,8 @@ var requestAnimFrame = (function () {
             window.setTimeout(callback, 1000 / 20);
         };
 })();
-var ship=new  User_ship()
+var ship = new User_ship()
+
 function del_all() {
     bul_a.splice(0, bul_a.length)
     aster.splice(0, aster.length)
@@ -268,17 +279,39 @@ function stat() {
     contex.fillText("HP:  " + ship.health + " Heart:  " + ship.live + " Score:  " + SCORE, 0, height_game - 12)
 }
 
+function moveRect(e) {
+    var left = 10;
+    var top = 10;
+
+    switch (e.key) {
+        case "a":  // если нажата клавиша влево
+            ship.x -= left;
+            break;
+        case "w":   // если нажата клавиша вверх
+            ship.y = ship.y - top;
+            break;
+        case "d":   // если нажата клавиша вправо
+            ship.x += left;
+            break;
+        case "s":   // если нажата клавиша вниз
+            ship.y += top;
+            break;
+    }
+}
+
 function ship_movement() {
 
     ship.render()
-    canvas.addEventListener("mousemove", function (event) {
-        ship.x = event.offsetX;
-        ship.y = event.offsetY;
-    })
-
-    if (time_bul % 60 === 0) {
-        bul.push(new Bullet_U)
+    if (key_b === 1) {
+        addEventListener("keydown", moveRect);
+    } else {
+        canvas.addEventListener("mousemove", function (event) {
+            ship.x = event.offsetX;
+            ship.y = event.offsetY;
+        })
     }
+
+
     if (Time_kill !== 0) {
         while (Time_kill < 100 * 100 * 10) {
             Time_kill++;
@@ -287,15 +320,15 @@ function ship_movement() {
     }
     for (let j = 0; j < bul_a.length; j++) {
         if (bul_a[j] !== undefined) {
-                if (Math.abs(ship.y + 35 - bul_a[j].y1 + 13) < 70
-                    && Math.abs(ship.x - bul_a[j].x1) < 15
-                    || Math.abs(ship.y + 35 - bul_a[j].y2 + 13) < 70
-                    && Math.abs(ship.x - bul_a[j].x2) < 15 && (Time_kill === 0)) {
-                    ship.health  -= bul_a[j].damage;
-                    bul_a.splice(j,1)
-                    Time_kill++
-                    del_all();
-                    break;
+            if (Math.abs(ship.y + 35 - bul_a[j].y1 + 13) < 70
+                && Math.abs(ship.x - bul_a[j].x1) < 15
+                || Math.abs(ship.y + 35 - bul_a[j].y2 + 13) < 70
+                && Math.abs(ship.x - bul_a[j].x2) < 15 && (Time_kill === 0)) {
+                ship.health -= bul_a[j].damage;
+                bul_a.splice(j, 1)
+                Time_kill++
+                del_all();
+                break;
             }
 
         }
@@ -303,54 +336,56 @@ function ship_movement() {
     for (var j = 0; j < alien_board.length; j++) {
         if (alien_board[j] !== undefined) {
 
-                if (Math.abs(ship.y + 35 - alien_board[j].y + 35) < 70
-                    && Math.abs(ship.x - alien_board[j].x) < 35 && (Time_kill === 0)) {
-                    Time_kill++;
+            if (Math.abs(ship.y + 35 - alien_board[j].y + 35) < 70
+                && Math.abs(ship.x - alien_board[j].x) < 35 && (Time_kill === 0)) {
+                Time_kill++;
 
-                    ship.health -= alien_board[j].damage;
-                   alien_board.splice(j,1)
-                    break;
-                }
+                ship.health -= alien_board[j].damage;
+                alien_board.splice(j, 1)
+                break;
             }
         }
+    }
 
     for (var j = 0; j < aster.length; j++) {
 
         if (aster[j] !== undefined) {
-                if (Math.abs(ship.y + 35 - aster[j].y + 25) < 70
-                    && Math.abs(ship.x - aster[j].x) < 35 && (Time_kill === 0)) {
-                    ship.health  -= aster[j].damage;
-                    del_all();aster.splice(j,1)
-                    Time_kill++
-                    break;
-                }
+            if (Math.abs(ship.y + 35 - aster[j].y + 25) < 70
+                && Math.abs(ship.x - aster[j].x) < 35 && (Time_kill === 0)) {
+                ship.health -= aster[j].damage;
+                del_all();
+                aster.splice(j, 1)
+                Time_kill++
+                break;
             }
-
         }
+
+    }
     for (var j = 0; j < bul_boss.length; j++) {
         if (bul_boss[j] !== undefined) {
-                if (Math.abs(ship.y + 35 - bul_boss[j].y1 + 13) < 70
-                    && Math.abs(ship.x - bul_boss[j].x1) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y2 + 13) < 70
-                    && Math.abs(ship.x - bul_boss[j].x2) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y3 + 13) < 70
-                    && Math.abs(ship.x - bul_boss[j].x3) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y4 + 13) < 70
-                    && Math.abs(ship.x - bul_boss[j].x4) < 35 || Math.abs(ship.y - bul_boss[j].yup2) < 35
-                    && Math.abs(ship.x + 35 - bul_boss[j].xup2 + 13) < 70 || Math.abs(ship.y - bul_boss[j].yup1) < 35
-                    && Math.abs(ship.x + 35 - bul_boss[j].xup1 + 13) < 70 || Math.abs(ship.y - bul_boss[j].ydown2) < 35
-                    && Math.abs(ship.x + 35 - bul_boss[j].xdown2 + 13) < 70 || Math.abs(ship.y - bul_boss[j].ydown1) < 35
-                    && Math.abs(ship.x + 35 - bul_boss[j].xdown1 + 13) < 70 && (Time_kill === 0)) {
-                    ship.health -= bul_boss[j].damage;
-                   bul_boss.splice(j,1)
-                    Time_kill++;
-                    break;
-                }
+            if (Math.abs(ship.y + 35 - bul_boss[j].y1 + 13) < 70
+                && Math.abs(ship.x - bul_boss[j].x1) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y2 + 13) < 70
+                && Math.abs(ship.x - bul_boss[j].x2) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y3 + 13) < 70
+                && Math.abs(ship.x - bul_boss[j].x3) < 35 || Math.abs(ship.y + 35 - bul_boss[j].y4 + 13) < 70
+                && Math.abs(ship.x - bul_boss[j].x4) < 35 || Math.abs(ship.y - bul_boss[j].yup2) < 35
+                && Math.abs(ship.x + 35 - bul_boss[j].xup2 + 13) < 70 || Math.abs(ship.y - bul_boss[j].yup1) < 35
+                && Math.abs(ship.x + 35 - bul_boss[j].xup1 + 13) < 70 || Math.abs(ship.y - bul_boss[j].ydown2) < 35
+                && Math.abs(ship.x + 35 - bul_boss[j].xdown2 + 13) < 70 || Math.abs(ship.y - bul_boss[j].ydown1) < 35
+                && Math.abs(ship.x + 35 - bul_boss[j].xdown1 + 13) < 70 && (Time_kill === 0)) {
+                ship.health -= bul_boss[j].damage;
+                bul_boss.splice(j, 1)
+                Time_kill++;
+                break;
             }
+        }
 
 
     }
     if (Math.abs(ship.y + 35 - boss.y + 222) < 444
         && Math.abs(ship.x - boss.x) < 222) {
         ship.health -= boss.damage;
-       }
+    }
+
     if (ship.health <= 0) {
         ship.live--;
         if (ship.live <= 0) {
@@ -361,18 +396,33 @@ function ship_movement() {
             user_board.globalAlpha = 0.5
         }
     }
-    time_bul++;
+    if (key_b === 0) {
+        if (time_bul % 60 === 0) {
+            bul.push(new Bullet_U)
+              }
+    } else {
+        canvas.addEventListener("mousedown", function (event) {
+
+            if (time_bul % 60 === 0)
+                bul.push(new Bullet_U)
+            time_bul++;
+        })
+    }
     for (let i = 0; i < bul.length; i++) {
         bul[i].render()
         bul[i].update()
         if (bul[i].x > widht_game + 1) {
             bul.splice(i, 1)
         }
-    }}
+
+    }
+    time_bul++;
+
+}
 
 
 function menu() {
-    return 0;
+
 }
 
 function spawn_alien_ships() {
@@ -495,7 +545,8 @@ function boss_game() {
 }
 
 /*основной игровой цикл*/
-function spawn_objects() {ship_movement()
+function spawn_objects() {
+    ship_movement()
     spawn_aster();
     spawn_alien_ships();
 }
@@ -513,9 +564,11 @@ function game() {
 
             if (flag === 2) {
                 stat();
+                contex.drawImage(win1, widht_game / 2 - 400, height_game / 2 - 400, 900, 800);
                 console.log("win")
             } else {
                 stat();
+                contex.drawImage(lose, widht_game / 2 - 400, height_game / 2 - 400, 900, 800);
                 console.log('2222222')
 
             }
@@ -529,8 +582,10 @@ function game() {
         } else {
             contex.clearRect(0, 0, widht_game + 100, height_game + 200);
             stat();
+            contex.drawImage(lose, widht_game / 2 - 400, height_game / 2 - 400, 900, 800);
             console.log('11111')
             return menu()
+
         }
     }
 }
