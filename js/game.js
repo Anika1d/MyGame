@@ -7,10 +7,10 @@ var time_set_aster = 0;
 var time_bul = 0;
 var time_bul_a = 0;
 var time_set_alien = 0;
-var ship;
 /*Размеры поля  */
 var OX;
 var OY;
+var game_load = 0
 canvas.width = window.innerWidth
 var widht_game = canvas.width - 70
 canvas.height = window.innerHeight
@@ -45,10 +45,12 @@ bullet.src = 'img/tema/fire.png'
 var bullet_a = new Image();
 bullet_a.src = 'img/tema/fire_ul.png'
 var bul = [];
+
 var bul_a = [];
 var alien_board = [];
 var bos = new Image()
 bos.src = 'img/Alien_Ships/Alien-Mothership2.png'
+
 /*--------------------------------------*/
 
 
@@ -84,6 +86,7 @@ class Asteroid {
     }
 
 }
+
 
 class Alien {
 
@@ -246,6 +249,44 @@ class Bullet_U {
     }
 }
 
+var ship = new User_ship()
+var boss = new Alien_Boss();
+
+function rezet_ol() {
+
+    canvas = document.getElementById('Game_js');
+    contex = canvas.getContext('2d');
+    time_set_aster = 0;
+    ship = new User_ship()
+    boss = new Alien_Boss();
+    time_bul = 0;
+    time_bul_a = 0;
+    time_set_alien = 0;
+
+    canvas.width = window.innerWidth
+    widht_game = canvas.width - 70
+    canvas.height = window.innerHeight
+    height_game = canvas.height - 150
+    /*!Creating start game objects and their Function!*/
+
+    /*--------------------------------------*/
+
+    flag = 1
+    Time_kill = 0
+
+    aster = []
+    bul_boss = []
+    time_boss = 0;
+    SCORE = 0;
+
+    bul = [];
+    bul_a = [];
+    alien_board = [];
+
+
+    /*--------------------------------------*/
+
+}
 
 /*!вызов игры!*/
 /*-------------------*/
@@ -260,7 +301,6 @@ var requestAnimFrame = (function () {
             window.setTimeout(callback, 1000 / 20);
         };
 })();
-var ship = new User_ship()
 
 function del_all() {
     bul_a.splice(0, bul_a.length)
@@ -271,6 +311,7 @@ function del_all() {
 function del_all_and_b() {
     del_all();
     boss = undefined;
+    ship = undefined;
 }
 
 function stat() {
@@ -295,20 +336,23 @@ function moveRect(e) {
             break;
         case "s":   // если нажата клавиша вниз
             ship.y += top;
-            break;
     }
+}
+
+function moveRect_m(e) {
+    ship.x = e.offsetX;
+    ship.y = e.offsetY;
+
+
 }
 
 function ship_movement() {
 
     ship.render()
-    if (key_b === 1) {
-        addEventListener("keydown", moveRect);
+    if (key_b > 0) {
+       canvas.addEventListener("keydown", moveRect);
     } else {
-        canvas.addEventListener("mousemove", function (event) {
-            ship.x = event.offsetX;
-            ship.y = event.offsetY;
-        })
+        canvas.addEventListener("mousemove", moveRect_m);
     }
 
 
@@ -399,7 +443,7 @@ function ship_movement() {
     if (key_b === 0) {
         if (time_bul % 60 === 0) {
             bul.push(new Bullet_U)
-              }
+        }
     } else {
         canvas.addEventListener("mousedown", function (event) {
 
@@ -420,8 +464,30 @@ function ship_movement() {
 
 }
 
+function listener(e) {
+    if (e.key === 'F3') {
+        console.log("ife")
+        select_game()
+
+
+    } else {
+        console.log("else")
+        select_game()
+
+
+    }
+    canvas.removeEventListener('keydown', listener, false);
+}
+
 
 function menu() {
+    //пытаюcь после победы выигрыша  попасть  в меню выбора
+    contex.drawImage(again, widht_game / 2, height_game - 200, 500, 400);
+    contex.fillStyle = '#ff0a0a'
+    contex.font = "50px Verdana";
+    contex.fillText("press any key, to restart", 0, height_game - 200)
+    canvas.addEventListener('keydown', listener, false);
+
 
 }
 
@@ -572,7 +638,7 @@ function game() {
                 console.log('2222222')
 
             }
-            return menu();
+            menu()
         }
     } else {
         render();
@@ -584,7 +650,7 @@ function game() {
             stat();
             contex.drawImage(lose, widht_game / 2 - 400, height_game / 2 - 400, 900, 800);
             console.log('11111')
-            return menu()
+            menu()
 
         }
     }
@@ -595,12 +661,49 @@ function render() {
     spawn_objects();
 }
 
-var b = true
-while (b) {
+function listener_m(e) {
+    if (game_load === 0) {
+        if (e.keyCode === 70) {
+            key_b = 1
+            game_load = 1
+            main()
 
+        } else {
+            game_load = 1
+            key_b = 0
+            main()
+
+        }
+    }
+    canvas.removeEventListener('keydown', listener_m, false);
+}
+
+//пытаюсь выбрать режим игры
+function select_game() {
+    del_all_and_b();
+    rezet_ol();
+    game_load = 0;
+    contex.clearRect(0, 0, widht_game + 100, height_game + 200);
+    contex.fillStyle = '#ff0a0a'
+    contex.font = "50px Verdana";
+    contex.fillText("press F for play keyboard, any - play only mouse", 0, height_game - 200)
+    canvas.addEventListener('keydown', listener_m, false);
+
+}
+
+///меню игры
+function main() {
+
+    ship.x = 5
+    contex.clearRect(0, 0, widht_game + 100, height_game + 200);
     ship.render()
-    var boss = new Alien_Boss();
-    b = game();
-
+    console.log("3r432r")
+    game();
+    canvas.removeEventListener("mousemove", moveRect_m);
+    canvas.removeEventListener("keydown", moveRect);
+    console.log("bady")
     contex.clearRect(0, 0, widht_game + 100, height_game + 200);
 }
+
+select_game()
+
