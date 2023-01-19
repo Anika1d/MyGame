@@ -619,7 +619,7 @@ function spawn_objects() {
 
 function game() {
     contex.clearRect(0, 0, widht_game + 100, height_game + 200);
-    if (SCORE > 2) {
+    if (SCORE > 100) {
         del_all();
         boss_game();
         if (flag === 1) {
